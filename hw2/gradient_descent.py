@@ -65,7 +65,7 @@ def create_tensor_dataset(raw_data: Dict[str, List[Union[int, str]]],
 
         # TODO (Copy from your HW1): complete the for loop to featurize each sentence
         # only add the feature and label to the list if the feature is not None
-
+        pass
         # your code ends here
 
     # stack all features and labels into two single tensors and create a TensorDataset
@@ -105,7 +105,7 @@ class SentimentClassifier(nn.Module):
         # Hint: follow the hints in the pdf description
         # - logits is a tensor of shape (batch_size, num_classes)
         # - return a tensor of shape (batch_size, num_classes) with the softmax of the logits
-
+        return
         # your code ends here
 
     # The function that perform backward pass
@@ -194,7 +194,7 @@ def train(model: SentimentClassifier,
             # since we are doing gradient descent manually
             with torch.no_grad():
                 # TODO: complete the gradient descent update for the linear layer's weights and bias
-
+                pass
                 # your code ends here
 
             # record the loss and accuracy

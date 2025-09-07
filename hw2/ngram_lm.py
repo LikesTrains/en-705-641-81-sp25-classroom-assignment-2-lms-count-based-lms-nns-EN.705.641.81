@@ -48,6 +48,7 @@ def create_ngrams(data, n, splitter, tokenizer):
 
             # TODO: tokenize the words in the sentence
             # name the list of tokens as 'tokens'
+            tokens = tokenizer.tokenize(sentence)
 
             # Your code ends here
 
@@ -66,6 +67,23 @@ def create_ngrams(data, n, splitter, tokenizer):
                 #   and its occurrence count as values
                 # - 'next_word_candidates' is a dictionary with tuple of the context
                 #   (i.e. the (n-1)-grams) as keys and a set of possible next words as values
+                tuple_ngram = tuple(tokens[idx:idx+n])
+                tuple_context = tuple(tokens[idx:idx+n-1])
+
+                if tuple_ngram in ngrams:
+                    ngrams[tuple_ngram] += 1 
+                else:
+                    ngrams[tuple_ngram] = 1
+
+                if tuple_context in ngram_context:
+                    ngram_context[tuple_context] += 1 
+                else:
+                    ngram_context[tuple_context] = 1
+
+                if tuple_context in next_word_candidates:
+                    next_word_candidates[tuple_context].add(tokens[idx+n-1])
+                else:
+                    next_word_candidates[tuple_context] = set([tokens[idx+n-1]])
 
                 # Your code ends here
 
@@ -86,6 +104,8 @@ def create_ngrams(data, n, splitter, tokenizer):
         for nw in next_words:
             # TODO: compute the estimated probability of the next word given the context
             # hint: use the counters 'ngrams' and 'ngram_context' you have created above
+            score = ngrams[context+tuple([nw])]/ngram_context[context]
+            scores.append(score)
 
             # Your code ends here
 
@@ -118,7 +138,25 @@ def plot_next_word_prob(word_scores, word_candidates, context, top=10, save_path
     # - word_candidates is a dictionary with tuple of the context as keys and a list of possible next words as values (the sorted_next_word_candidates in create_ngrams function)
     # - for a given context, elements in word_scores[context] and word_candidates[context] have one-to-one correspondence
     # - context is a tuple of words
+    keys = list(word_candidates[context])
+    values = list(word_scores[context])
 
+    if len(keys) > top:
+        pairs = [(key, value) for key,value in zip(keys, values)]
+        pairs = sorted(pairs, key=lambda k: k[1], reverse=True)
+
+        pairs = pairs[:top]
+        keys = [pair[0] for pair in pairs]
+        values = [pair[1] for pair in pairs]
+
+    plt.barh(keys, values)
+    plt.title(f"Top {top} words for {context}")
+    plt.xlabel('Candidate words')
+    plt.ylabel('Word probability')
+    plt.show()
+
+    if save_path:
+        plt.savefig(save_path)
 
     # Your code ends here
 
